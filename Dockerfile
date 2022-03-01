@@ -19,8 +19,8 @@ RUN if [ ! -f "${LIVY_PACKAGE}" ]; then curl --progress-bar -L --retry 3 \
   && unzip -qq "${USR_BIN_DIR}/${LIVY_PACKAGE}" -d /usr \
   && mv "/usr/apache-livy-${LIVY_VERSION}-bin" "${LIVY_HOME}" \
   && mkdir "${LIVY_HOME}/logs" \
-  && chown -R root:root "${LIVY_HOME}"
-  && rm -rf "${USR_BIN_DIR}/*" \
+  && chown -R root:root "${LIVY_HOME}" \
+  && rm -rf "${USR_BIN_DIR}/*" 
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
