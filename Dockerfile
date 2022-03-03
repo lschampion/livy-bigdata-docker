@@ -1,4 +1,4 @@
-FROM lisacumt/hadoop-hive-hbase-spark-docker:1.0.5 as env_package
+FROM lisacumt/bigdata_base_env_img:1.1.1 as base_package
 
 ENV LIVY_VERSION=0.7.0-incubating
 ENV LIVY_HOME=/usr/program/livy
@@ -6,7 +6,7 @@ ENV LIVY_CONF_DIR="${LIVY_HOME}/conf"
 ENV LIVY_PACKAGE="apache-livy-${LIVY_VERSION}-bin.zip"
 
 ######################################################################
-FROM env_package as application_package
+FROM base_package as application_package
 ENV USR_PROGRAM_DIR=/usr/program
 ENV USR_BIN_DIR="${USR_PROGRAM_DIR}/source_dir"
 RUN mkdir -p "${USR_BIN_DIR}"
@@ -25,8 +25,20 @@ RUN if [ ! -f "${LIVY_PACKAGE}" ]; then curl --progress-bar -L --retry 3 \
   && rm -rf "${USR_PROGRAM_DIR}/source_dir/*" 
 
 ######################################################################
-FROM env_package
+FROM base_package
 COPY --from=application_package "${LIVY_HOME}"/ "${LIVY_HOME}"/
+COPY conf/livy.conf "${LIVY_CONF_DIR}"/
+RUN mkdir -p "${HADOOP_CONF_DIR}" \
+ && mkdir -p "${HIVE_CONF_DIR}" \
+ && mkdir -p "${HBASE_CONF_DIR}" \
+ && mkdir -p "${SPARK_CONF_DIR}"
+
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HIVE_CONF_DIR}"/ "${HIVE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${SPARK_HOME}"/ "${SPARK_HOME}"/
+
+
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
