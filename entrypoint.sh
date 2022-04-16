@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# chmod +755 -R ${LIVY_HOME}
 # Configure Livy based on environment variables
 if [[ -n "${SPARK_MASTER}" ]]; then
   echo "livy.spark.master=${SPARK_MASTER}" >> "${LIVY_CONF_DIR}/livy.conf"
@@ -20,4 +21,7 @@ if [[ -n "${LIVY_PORT}" ]]; then
   echo "livy.server.port=${LIVY_PORT}" >> "${LIVY_CONF_DIR}/livy.conf"
 fi
 
-"$LIVY_HOME/bin/livy-server" $@
+# "$LIVY_HOME/bin/livy-server" $@
+
+# Blocking call to view all logs. This is what won't let container exit right away.
+/scripts/parallel_commands.sh "scripts/watchdir ${LIVY_LOG_DIR}"

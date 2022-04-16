@@ -1,8 +1,9 @@
-FROM lisacumt/bigdata_base_env_img:1.1.1 as base_package
+FROM lisacumt/bigdata_base_env_img:1.1.2 as base_package
 
-ENV LIVY_VERSION=0.7.0-incubating
+ENV LIVY_VERSION=0.8.0-incubating
 ENV LIVY_HOME=/usr/program/livy
 ENV LIVY_CONF_DIR="${LIVY_HOME}/conf"
+ENV LIVY_LOG_DIR="${LIVY_HOME}/logs"
 ENV LIVY_PACKAGE="apache-livy-${LIVY_VERSION}-bin.zip"
 
 ######################################################################
@@ -20,8 +21,9 @@ RUN if [ ! -f "${LIVY_PACKAGE}" ]; then curl --progress-bar -L --retry 3 \
     "http://archive.apache.org/dist/incubator/livy/${LIVY_VERSION}/${LIVY_PACKAGE}" -o "${USR_PROGRAM_DIR}/source_dir/${LIVY_PACKAGE}" ; fi \
   && unzip -qq "${USR_PROGRAM_DIR}/source_dir/${LIVY_PACKAGE}" -d "${USR_PROGRAM_DIR}" \
   && mv "${USR_PROGRAM_DIR}/apache-livy-${LIVY_VERSION}-bin" "${LIVY_HOME}" \
-  && mkdir "${LIVY_HOME}/logs" \
+  && mkdir -p "${LIVY_LOG_DIR}" \
   && chown -R root:root "${LIVY_HOME}" \
+  && chmod +755 -R "${LIVY_HOME}" \
   && rm -rf "${USR_PROGRAM_DIR}/source_dir/*" 
 
 ######################################################################
@@ -33,10 +35,11 @@ RUN mkdir -p "${HADOOP_CONF_DIR}" \
  && mkdir -p "${HBASE_CONF_DIR}" \
  && mkdir -p "${SPARK_CONF_DIR}"
 
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HIVE_CONF_DIR}"/ "${HIVE_CONF_DIR}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${SPARK_HOME}"/ "${SPARK_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HIVE_CONF_DIR}"/ "${HIVE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${SPARK_HOME}"/ "${SPARK_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${TEZ_HOME}"/ "${TEZ_HOME}"/
 
 
 COPY entrypoint.sh /
