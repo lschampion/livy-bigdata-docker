@@ -30,8 +30,6 @@ to see how I use it as a part of a Docker Compose cluster.
 
 Apache Livy是用于快速、简单地和Spark交互的REST服务。它可以很方便地通过REST接口或者RPC客户端，提交Spark作业或者是代码片段，以同步或者异步的方式获取执行结果，就像使用Spark Context一样。
 
-![img](README.assets/modb_20210908_6d543288-105d-11ec-b6f0-00163e068ecd.png)image-20210203123502123
-
 还有其他的一些额外功能，例如：
 
 - 长时间运行的Spark上下文可以被多个客户端、多个Spark作业使用。
@@ -102,7 +100,7 @@ cd /root/incubator-livy/assembly/target/
 # 解压缩、重命名并压缩
 unzip apache-livy-0.8.0-incubating-SNAPSHOT-bin.zip 
 mv apache-livy-0.8.0-incubating-SNAPSHOT-bin apache-livy-0.8.0-incubating-bin
-zip livy-0.8.0-spark3.1.1-hadoop-3.2.1
+zip apache-livy-0.8.0-incubating-bin
 ```
 
-最终得到`livy-0.8.0-spark3.1.1-hadoop-3.2.1.zip`文件
+最终得到`apache-livy-0.8.0-incubating-bin.zip`文件
