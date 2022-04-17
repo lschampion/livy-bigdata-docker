@@ -33,17 +33,21 @@ COPY conf/livy.conf "${LIVY_CONF_DIR}"/
 RUN mkdir -p "${HADOOP_CONF_DIR}" \
  && mkdir -p "${HIVE_CONF_DIR}" \
  && mkdir -p "${HBASE_CONF_DIR}" \
- && mkdir -p "${SPARK_CONF_DIR}"
+ && mkdir -p "${SPARK_CONF_DIR}" \
+ && mkdir -p "/scripts/"
 
 COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
 COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HIVE_CONF_DIR}"/ "${HIVE_CONF_DIR}"/
 COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
 COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${SPARK_HOME}"/ "${SPARK_HOME}"/
 COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${TEZ_HOME}"/ "${TEZ_HOME}"/
-
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 /scripts/* /scripts/
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
+
+
+
 
 HEALTHCHECK CMD curl -f "http://host.docker.internal:${LIVY_PORT}/" || exit 1
 
