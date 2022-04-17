@@ -1,4 +1,4 @@
-FROM lisacumt/bigdata_base_env_img:1.1.2 as base_package
+FROM lisacumt/bigdata_base_env_img:1.1.3 as base_package
 
 ENV LIVY_VERSION=0.8.0-incubating
 ENV LIVY_HOME=/usr/program/livy
@@ -36,12 +36,12 @@ RUN mkdir -p "${HADOOP_CONF_DIR}" \
  && mkdir -p "${SPARK_CONF_DIR}" \
  && mkdir -p "/scripts/"
 
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HIVE_CONF_DIR}"/ "${HIVE_CONF_DIR}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${SPARK_HOME}"/ "${SPARK_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 "${TEZ_HOME}"/ "${TEZ_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.2 /scripts/* /scripts/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${HIVE_CONF_DIR}"/ "${HIVE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${SPARK_HOME}"/ "${SPARK_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${TEZ_HOME}"/ "${TEZ_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 /scripts/* /scripts/
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
